@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # --- Крок 1: тести ---
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run tests
+        run: python -m unittest discover -v
+
+      # --- Крок 2: симуляція деплою ---
+      # Запуститься ТІЛЬКИ якщо попередній крок завершився успішно.
+      # Якщо Run tests впаде — цей крок буде пропущено.
+      - name: Deploy
+        run: echo "Deployed"
