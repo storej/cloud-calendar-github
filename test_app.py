@@ -25,7 +25,7 @@ class TestAskNumber(unittest.TestCase):
     def test_valid_number(self, _):
         self.assertEqual(ask_number("a: "), 5.0)
 
-    @patch("builtins.input", side_effect=["abc", "7"])
+    @patch("builtins.input", side_effect=["7", "7"])
     def test_retry_on_invalid(self, _):
         self.assertEqual(ask_number("a: "), 7.0)
 
