@@ -1,33 +1,30 @@
-name: CI
+name: Calculator CI/CD
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
 
 jobs:
-  build:
+  tests:
     runs-on: ubuntu-latest
-
     steps:
-      # --- Крок 1: тести ---
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Отримати код
+        uses: actions/checkout@v7
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Налаштувати Python
+        uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      - name: Запустити тести
+        run: python -m unittest -v test_app
 
-      - name: Run tests
-        run: python -m unittest discover -v
-
-      # --- Крок 2: симуляція деплою ---
-      - name: Deploy
+  deploy:
+    # Запускається лише після успішного завершення тестів.
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Симуляція деплою
         run: echo "Deployed"
+
